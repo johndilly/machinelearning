@@ -1,0 +1,96 @@
+Here below is an example of RandomForest model, and looks like it works, the issue in this code is after Machine learning, the error formula is not correct, but doesn't matter, I will replace it. 
+
+
+import pandas as pd
+import numpy as np
+# read csv file into dataframe. 
+features = pd.read_csv("/Users/xdu/Documents/cornell/sysen5880/0Classifier/train2016.csv") . 
+
+#select features (remove unnecessary features. ) TODO: some files doesn't contain columns : 'fips', 'aream'. We should use "pick up " API instead of "drop" API.  
+features= features.drop(['cover','STUSAB','description', 'name', '.geo', 'system:index','AGRICDOY','AGRICDOY_1', 'AGRICDOY_2', 
+'BLUE', 'MODISnorm', 'RED', 'SWIR2', 'b1', 'bname', 'bsid', 'crop','cycle','tasks', 'org', 'fips', 'aream'], axis = 1)
+# Saving feature names for later use
+feature_list = list(features.columns)
+# Convert to numpy array
+features = np.array(features)
+#print(feature_list) you can uncomment this line if you don't understand. 
+# Split the data into training and testing sets, test_size = 0.25 means 25% will be test set. 
+
+train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size = 0.25, random_state = 42)
+
+#print('Training Features Shape:', train_features.shape)
+#print('Training Labels Shape:', train_labels.shape)
+#print('Testing Features Shape:', test_features.shape)
+#print('Testing Labels Shape:', test_labels.shape) you can uncomment these lines. 
+
+
+
+
+#here below is specific for Random Forest, you need to replace with your model. 
+clf = RandomForestClassifier(n_estimators=1000, max_depth=8)
+
+clf.fit(train_features, train_labels)
+# Use the forest's predict method on the test data
+predictions = clf.predict(test_features)
+
+print(predictions)
+# Calculate the absolute errors
+errors = abs(predictions -test_labels) . # the error function is wrong, we need to use square root. @Yanqiu Tao  knows better. 
+#errors_text = ''.join(str(x) for x in errors)
+#path = "/Users/xdu/Documents/cornell/sysen5880/0Classifier/test_debug.txt"
+#w_file = open(path,'w')
+#w_file.write(errors_text)
+#w_file.close()
+
+
+# Print out the mean absolute error (mae)
+#print(test_labels)
+#print(errors)
+print('Mean Absolute Error:', np.mean(errors), 'degrees.')
+
+
+This is my output: 
+
+[1. 0. 0. ... 1. 0. 0.]
+[1. 0. 0. ... 1. 0. 0.]
+[0. 0. 0. ... 0. 0. 0.]
+Mean Absolute Error: 0.059064986625843245 degrees
+Does it mean accuray is 5%? @Yanqiu Tao 
+
+
+
+Hope this example help you. If you have problem with your model, try google search "Jupyter XXX model". 
+
+
+
+
+
+
+
+
+
+“cover” column but it looked like it was dropped from the features list
+Because "cover" is y, not a feature, so removed.  
+
+Sorry I missed some lines : labels = np.array(features['cover'])
+
+
+
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
+import numpy as np
+features = pd.read_csv("/Users/xdu/Documents/cornell/sysen5880/0Classifier/train2016.csv")
+
+# Labels are the values we want to predict
+labels = np.array(features['cover'])
+
+
+# Remove the labels from the features
+# axis 1 refers to the columns
+features= features.drop(['cover','STUSAB','description', 'name', '.geo', 'system:index','AGRICDOY','AGRICDOY_1', 'AGRICDOY_2', 
+'BLUE', 'MODISnorm', 'RED', 'SWIR2', 'b1', 'bname', 'bsid', 'crop','cycle','tasks', 'org', 'fips', 'aream'], axis = 1)
+
+
+Let me know if you have any questions
